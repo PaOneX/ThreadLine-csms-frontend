@@ -38,7 +38,7 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
 
   return (
     <aside className="flex flex-col w-72 h-screen px-6 py-8 overflow-y-auto bg-[#0f172a] border-r border-white/5 shadow-2xl">
-      <div
+      <button
         className="flex items-center gap-x-3 px-2 cursor-pointer group"
         onClick={() => (globalThis.location.href = "/")}
       >
@@ -53,7 +53,7 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
         <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white to-slate-400">
           ThreadLine
         </span>
-      </div>
+      </button>
 
       <div className="flex flex-col justify-between flex-1 mt-12">
         <nav className="space-y-1.5">
