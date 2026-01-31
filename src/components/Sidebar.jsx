@@ -1,25 +1,48 @@
 import {
+  ArrowDown,
   ChartBarStacked,
   CirclePile,
+  LogOut,
+  Settings,
   ShoppingBasket,
   Users,
 } from "lucide-react";
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Sidebar = ({ activeSection, setActiveSection }) => {
   const menuItems = [
-    { id: "products", label: "Products", icon: "" },
-    { id: "categories", label: "Categories", icon: "" },
-    { id: "inventory", label: "Inventory", icon: "" },
-    { id: "users", label: "Users", icon: "" },
+    { id: "products", label: "Products", icon: <ShoppingBasket /> },
+    { id: "categories", label: "Categories", icon: <ChartBarStacked /> },
+    { id: "inventory", label: "Inventory", icon: <CirclePile /> },
+    { id: "users", label: "Users", icon: <Users /> },
   ];
+
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const menuRef = useRef();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (!menuRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    }
+    if (profileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileMenuOpen]);
 
   return (
     <aside className="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-slate-900 border-r border-slate-700">
-      <div className="flex items-center gap-x-3 px-2">
-        <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold">T</span>
-        </div>
+      <div
+        className="flex items-center gap-x-3 px-2 cursor-pointer"
+        onClick={() => (window.location.href = "/")}
+      >
+        <img
+          src="/src/assets/logo.png"
+          alt="ThreadLine Logo"
+          className="w-8 h-8 rounded-lg bg-sky-900 object-cover"
+        />
         <span className="text-xl font-bold text-white tracking-tight">
           ThreadLine
         </span>
@@ -35,9 +58,9 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`flex items-center w-full px-3 py-2 transition-colors duration-300 transform rounded-lg group ${
+              className={`flex items-center w-full px-3 py-2 transition-colors duration-300 transform rounded-lg cursor-pointer group ${
                 activeSection === item.id
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-sky-900 text-white"
                   : "text-slate-300 hover:bg-slate-800 hover:text-white"
               }`}
             >
@@ -47,16 +70,54 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
           ))}
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-slate-700">
-          <div className="flex items-center gap-x-2 px-2">
-            <div className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-xs text-white">
-              AD
+        <div
+          ref={menuRef}
+          className="mt-auto pt-6 border-t border-slate-700 relative"
+        >
+          <button
+            className="flex items-center gap-x-2 px-2 w-full hover:bg-slate-800 rounded-lg transition-xl transition-all duration-200 cursor-pointer py-3 group"
+            onClick={() => setProfileMenuOpen((open) => !open)}
+          >
+            <img
+              src="https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=Admin+User"
+              alt="Profile"
+              className="w-9 h-9 rounded-full ring-2 ring-slate-700 group-hover:ring-sky-800 transition-all"
+            />
+            <div className="text-sm text-left flex-1">
+              <p className="text-slate-200 font-semibold leading-none mb-1">
+                Admin User
+              </p>
+              <p className="text-slate-500 text-xs">admin01</p>
             </div>
-            <div className="text-sm">
-              <p className="text-white font-medium">Admin User</p>
-              <p className="text-slate-400 text-xs">v1.0.0</p>
+            <span
+              className={`text-slate-500 transition-transform duration-200 ${profileMenuOpen ? "rotate-180" : ""}`}
+            >
+              <ArrowDown size={18} />
+            </span>
+          </button>
+          {profileMenuOpen && (
+            <div className="absolute bottom-20 left-0 w-full bg-slate-800 border border-slate-700 rounded-xl shadow-2xl z-50 py-2 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="px-4 py-2 border-b border-slate-700 mb-1">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Account
+                </p>
+              </div>
+
+              <button className="flex items-center gap-x-3 w-full text-left px-4 py-2.5 hover:bg-slate-700 text-slate-300 transition-colors text-sm">
+                <span>
+                  <Settings />
+                </span>
+                Settings
+              </button>
+
+              <button className="flex items-center gap-x-3 w-full text-left px-4 py-2.5 hover:bg-red-500/10 text-red-400 transition-colors text-sm font-medium">
+                <span>
+                  <LogOut />
+                </span>
+                Sign out
+              </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </aside>
