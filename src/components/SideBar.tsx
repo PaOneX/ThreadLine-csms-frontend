@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const Sidebar = ({ activeSection, setActiveSection }) => {
+type SidebarProps = {
+  activeSection: string;
+  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
   const menuItems = [
     { id: "products", label: "Products", icon: <ShoppingBasket size={20} /> },
     {
@@ -22,11 +27,11 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
   ];
 
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const menuRef = useRef();
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setProfileMenuOpen(false);
       }
     }
@@ -118,7 +123,7 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
           </button>
 
           {profileMenuOpen && (
-            <div className="absolute bottom-20 left-0 w-full bg-[#1e293b] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 py-2 overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="absolute bottom-20 left-0 w-full bg-[#1e293b] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 py-2 overflow-hidden backdrop-blur-xl duration-200">
               <div className="px-4 py-2 border-b border-white/5 mb-1">
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   Account
